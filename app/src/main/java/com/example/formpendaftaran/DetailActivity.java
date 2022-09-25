@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
     
     private void setupListener() {
         binding.btnUpdate.setOnClickListener(s -> {
-            Intent intent = new Intent(this, DetailActivity.class);
+            Intent intent = new Intent(this, UpdateActivity.class);
             intent.putExtra("id", getIntent().getIntExtra("id", 0));
             intent.putExtra("name", getIntent().getStringExtra("name"));
             intent.putExtra("address", getIntent().getStringExtra("address"));
@@ -61,6 +61,7 @@ public class DetailActivity extends AppCompatActivity {
             intent.putExtra("longitude", getIntent().getDoubleExtra("longitude", 0));
             intent.putExtra("image", getIntent().getStringExtra("image"));
             startActivity(intent);
+            this.finish();
         });
         binding.btnDelete.setOnClickListener(s -> {
             new AlertDialog.Builder(this)

@@ -68,8 +68,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void update(int id, String name, String address, String phoneNumber, String gender, Location location, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE_NAME + " SET " + COLUMN_NAME + " = '" + name + "', " + COLUMN_ADDRESS + " = '" + address + "', " + COLUMN_PHONE_NUMBER + " = '" + phoneNumber + "', " + COLUMN_GENDER + " = '" + gender;
-        if (location != null) query += "', " + COLUMN_LONGITUDE + " = " + location.getLatitude() + ", " + COLUMN_LONGITUDE + " = " + location.getLongitude();
+        String query = "UPDATE " + TABLE_NAME + " SET " + COLUMN_NAME + " = '" + name + "', " + COLUMN_ADDRESS + " = '" + address + "', " + COLUMN_PHONE_NUMBER + " = '" + phoneNumber + "', " + COLUMN_GENDER + " = '" + gender + "'";
+        if (location != null) query += ", " + COLUMN_LONGITUDE + " = " + location.getLatitude() + ", " + COLUMN_LONGITUDE + " = " + location.getLongitude();
         if (image != null) query += ", " + COLUMN_IMAGE + " = '" + image + "'";
         query += " WHERE " + COLUMN_ID + "=" + id;
         db.execSQL(query);
