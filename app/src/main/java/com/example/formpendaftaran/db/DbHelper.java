@@ -49,7 +49,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getString(4),
-                        new Location(cursor.getLong(5), cursor.getLong(6)),
+                        new Location(cursor.getDouble(5), cursor.getDouble(6)),
                         cursor.getString(7)
                 );
                 items.add(data);

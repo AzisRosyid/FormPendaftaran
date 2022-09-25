@@ -173,7 +173,7 @@
                 android:layout_height="175dp"
                 android:id="@+id/foto"
                 android:layout_marginTop="4dp"
-                android:src="@drawable/ic_baseline_image_24"
+                android:src="@drawable/ic_baseline_account_box_24"
                 app:layout_constraintTop_toBottomOf="@id/tv_foto"
                 app:layout_constraintStart_toStartOf="parent"
                 android:scaleType="centerCrop"/>
@@ -202,6 +202,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:cornerRadius="16dp"
         android:text="Submit"
+        android:backgroundTint="#0d6efd"
         android:textAllCaps="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

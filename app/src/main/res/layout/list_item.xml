@@ -9,7 +9,7 @@
     <androidx.constraintlayout.utils.widget.ImageFilterView
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:src="@drawable/ic_baseline_image_24"
+        android:src="@drawable/ic_baseline_account_box_24"
         android:scaleType="centerCrop"
         android:id="@+id/foto"
         app:layout_constraintStart_toStartOf="parent"

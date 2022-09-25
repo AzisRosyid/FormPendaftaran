@@ -47,12 +47,9 @@ public class Adapter extends BaseAdapter {
         TextView nama = convertView.findViewById(R.id.nama);
         nama.setText(item.getName());
 
-        try {
-            File path = new File(activity.getApplication().getFilesDir() + "/foto/" + item.getImage());
-            foto.setImageBitmap(BitmapFactory.decodeFile(path.getAbsolutePath()));
-        } catch (Exception e) {
-            foto.setImageResource(R.drawable.ic_baseline_image_24);
-        }
+        File path = new File(activity.getApplication().getFilesDir() + "/foto/" + item.getImage());
+        foto.setImageBitmap(BitmapFactory.decodeFile(path.getAbsolutePath()));
+        if (!path.exists()) foto.setImageResource(R.drawable.ic_baseline_account_box_24);
 
         return convertView;
     }
