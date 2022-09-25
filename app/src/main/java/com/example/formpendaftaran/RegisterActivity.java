@@ -188,6 +188,7 @@ public class RegisterActivity extends AppCompatActivity {
                         binding.statusLokasi.setTextColor(Color.parseColor("#43B500"));
                         binding.tvLokasi.setText("Lokasi Pendaftaran");
                         binding.tvLokasi.setTextColor(getResources().getColor(R.color.black));
+                        Toast.makeText(RegisterActivity.this, "Latitude : " + RegisterActivity.this.location.getLatitude() + ", Longitude : " + RegisterActivity.this.location.getLongitude(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }, Looper.getMainLooper());

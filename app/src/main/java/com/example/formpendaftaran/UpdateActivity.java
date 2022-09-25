@@ -18,6 +18,7 @@ import android.os.Looper;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.Toast;
 
 import com.example.formpendaftaran.databinding.ActivityRegisterBinding;
 import com.example.formpendaftaran.db.DbHelper;
@@ -167,8 +168,7 @@ public class UpdateActivity extends AppCompatActivity {
                         UpdateActivity.this.location = new Location(locationResult.getLocations().get(index).getLatitude(), locationResult.getLocations().get(index).getLongitude());
                         binding.statusLokasi.setText("Get Location Success!");
                         binding.statusLokasi.setTextColor(Color.parseColor("#43B500"));
-                        binding.tvLokasi.setText("Lokasi Pendaftaran");
-                        binding.tvLokasi.setTextColor(getResources().getColor(R.color.black));
+                        Toast.makeText(UpdateActivity.this, "Latitude : " + UpdateActivity.this.location.getLatitude() + ", Longitude : " + UpdateActivity.this.location.getLongitude(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }, Looper.getMainLooper());
@@ -272,8 +272,8 @@ public class UpdateActivity extends AppCompatActivity {
     private void turnOnGPS() {
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(2000);
+        locationRequest.setInterval(300);
+        locationRequest.setFastestInterval(100);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);

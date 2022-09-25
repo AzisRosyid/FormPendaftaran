@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.formpendaftaran.model.Data;
 import com.example.formpendaftaran.model.Location;
@@ -24,9 +25,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private final String COLUMN_LONGITUDE = "longitude";
     private final String COLUMN_IMAGE = "image";
 
-    public DbHelper(Context context) {
-        super(context, "coba.db", null, 2);
-    }
+    public DbHelper(Context context) { super(context, "coba.db", null, 2); }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -69,7 +68,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void update(int id, String name, String address, String phoneNumber, String gender, Location location, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME + " SET " + COLUMN_NAME + " = '" + name + "', " + COLUMN_ADDRESS + " = '" + address + "', " + COLUMN_PHONE_NUMBER + " = '" + phoneNumber + "', " + COLUMN_GENDER + " = '" + gender + "'";
-        if (location != null) query += ", " + COLUMN_LONGITUDE + " = " + location.getLatitude() + ", " + COLUMN_LONGITUDE + " = " + location.getLongitude();
+        if (location != null) query += ", " + COLUMN_LATITUDE + " = " + location.getLatitude() + ", " + COLUMN_LONGITUDE + " = " + location.getLongitude();
         if (image != null) query += ", " + COLUMN_IMAGE + " = '" + image + "'";
         query += " WHERE " + COLUMN_ID + "=" + id;
         db.execSQL(query);
