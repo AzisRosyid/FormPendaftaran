@@ -124,7 +124,12 @@ public class RegisterActivity extends AppCompatActivity {
                 binding.tvFoto.setText("Upload Foto");
                 binding.tvFoto.setTextColor(getResources().getColor(R.color.black));
             }
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 100);
+                valid = false;
+            }
             if (!valid) return;
+
             String fileName = System.currentTimeMillis() + "_" + getFileName(selectedImage);
             db.insert(binding.nama.getText().toString(), binding.alamat.getText().toString(), binding.noHp.getText().toString(), gender, location, fileName);
             savefile(selectedImage, fileName);
@@ -243,7 +248,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void savefile(Uri sourceuri, String fileName) {
         String sourceFilename= sourceuri.getPath();
-        String destinationFilename = getApplication().getFilesDir()+"/foto/"+ fileName;
+        File path = new File(getApplication().getFilesDir() + "/foto/");
+        if (!path.exists()) path.mkdirs();
+        String destinationFilename = path + fileName;
 
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;

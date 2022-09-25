@@ -44,7 +44,7 @@ public class Adapter extends BaseAdapter {
         TextView nama = convertView.findViewById(R.id.nama);
 
         nama.setText(item.getName());
-        foto.setImageURI(Uri.parse(item.getImage()));
+        foto.setImageResource(R.drawable.ic_baseline_image_24);
 
         return convertView;
     }

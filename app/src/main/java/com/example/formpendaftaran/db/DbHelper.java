@@ -61,7 +61,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void insert(String name, String address, String phoneNumber, String gender, Location location, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAME + ", " + COLUMN_ADDRESS + ", " + COLUMN_PHONE_NUMBER + ", " + COLUMN_GENDER + ", " + COLUMN_LATITUDE + ", " + COLUMN_LONGITUDE + ", " + COLUMN_IMAGE +") VALUES('" + name + "', '" + address + "', '" + phoneNumber + "', '" + gender + "', '" + location.getLatitude() + "', '" + location.getLongitude() + "', '" + image + "')");
+        db.execSQL("INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAME + ", " + COLUMN_ADDRESS + ", " + COLUMN_PHONE_NUMBER + ", " + COLUMN_GENDER + ", " + COLUMN_LATITUDE + ", " + COLUMN_LONGITUDE + ", " + COLUMN_IMAGE +") VALUES('" + name + "', '" + address + "', '" + phoneNumber + "', '" + gender + "', " + location.getLatitude() + ", " + location.getLongitude() + ", '" + image + "')");
         db.close();
     }
 }

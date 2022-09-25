@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setupListener();
 
-        adapter = new Adapter(this, new ArrayList<>());
+        adapter = new Adapter(this, items);
         binding.listview.setAdapter(adapter);
     }
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getData() {
         items.clear();
-        this.items = db.getData();
+        this.items.addAll(db.getData());
         adapter.notifyDataSetChanged();
     }
 }
