@@ -25,7 +25,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private final String COLUMN_LONGITUDE = "longitude";
     private final String COLUMN_IMAGE = "image";
 
-    public DbHelper(Context context) { super(context, "coba.db", null, 2); }
+    public DbHelper(Context context) { super(context, "data.db", null, 2); }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
