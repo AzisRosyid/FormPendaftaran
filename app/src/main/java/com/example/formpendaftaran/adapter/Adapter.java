@@ -2,6 +2,8 @@ package com.example.formpendaftaran.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.example.formpendaftaran.R;
 import com.example.formpendaftaran.model.Data;
 
+import java.io.File;
 import java.util.List;
 
 public class Adapter extends BaseAdapter {
@@ -42,9 +45,14 @@ public class Adapter extends BaseAdapter {
         Data item = items.get(position);
         ImageView foto = convertView.findViewById(R.id.foto);
         TextView nama = convertView.findViewById(R.id.nama);
-
         nama.setText(item.getName());
-        foto.setImageResource(R.drawable.ic_baseline_image_24);
+
+        try {
+            File path = new File(activity.getApplication().getFilesDir() + "/foto/" + item.getImage());
+            foto.setImageBitmap(BitmapFactory.decodeFile(path.getAbsolutePath()));
+        } catch (Exception e) {
+            foto.setImageResource(R.drawable.ic_baseline_image_24);
+        }
 
         return convertView;
     }

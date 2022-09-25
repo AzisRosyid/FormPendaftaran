@@ -19,6 +19,7 @@ import android.os.Looper;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -44,9 +45,13 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
+import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -76,6 +81,15 @@ public class RegisterActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupListener();
         requestPermission();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        binding.nama.setText("Azis Rosyid");
+        binding.alamat.setText("Indonesia");
+        binding.noHp.setText("02384374838");
+        binding.pria.setChecked(true);
     }
 
     @Override
@@ -132,7 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             String fileName = System.currentTimeMillis() + "_" + getFileName(selectedImage);
             db.insert(binding.nama.getText().toString(), binding.alamat.getText().toString(), binding.noHp.getText().toString(), gender, location, fileName);
-            savefile(selectedImage, fileName);
+            saveFile(selectedImage, fileName);
             this.finish();
         });
         binding.jenisKelamin.setOnCheckedChangeListener((group, checkedId) -> {
@@ -246,32 +260,26 @@ public class RegisterActivity extends AppCompatActivity {
         binding.tvFoto.setTextColor(getResources().getColor(R.color.black));
     });
 
-    private void savefile(Uri sourceuri, String fileName) {
-        String sourceFilename= sourceuri.getPath();
-        File path = new File(getApplication().getFilesDir() + "/foto/");
+    private void saveFile(Uri fileUri, String fileName) {
+        File path = new File(getApplication().getFilesDir() + "/foto");
         if (!path.exists()) path.mkdirs();
-        String destinationFilename = path + fileName;
+        String destination = path + "/" + fileName;
 
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
-
         try {
-            bis = new BufferedInputStream(new FileInputStream(sourceFilename));
-            bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
-            byte[] buf = new byte[1024];
-            bis.read(buf);
-            do {
-                bos.write(buf);
-            } while(bis.read(buf) != -1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+            bis = new BufferedInputStream(getContentResolver().openInputStream(fileUri));
+            bos = new BufferedOutputStream(new FileOutputStream(destination, false));
+            byte[] buffer = new byte[1024];
+            bis.read(buffer);
+            do bos.write(buffer);
+            while (bis.read(buffer) != -1);
+        } catch (IOException ioe) { }
+        finally {
             try {
-                if (bis != null) bis.close();
+                if (bis != null)  bis.close();
                 if (bos != null) bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException e) { }
         }
     }
 
