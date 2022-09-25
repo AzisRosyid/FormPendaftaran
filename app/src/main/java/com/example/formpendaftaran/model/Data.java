@@ -1,11 +1,12 @@
 package com.example.formpendaftaran.model;
 
 public class Data {
-    private String id, name, address, phoneNumber, gender, image;
+    private int id;
+    private String name, address, phoneNumber, gender, image;
     private Location location;
 
 
-    public Data(String id, String name, String address, String phoneNumber, String gender, Location location, String image) {
+    public Data(int id, String name, String address, String phoneNumber, String gender, Location location, String image) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -15,11 +16,11 @@ public class Data {
         this.image = image;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

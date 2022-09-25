@@ -1,6 +1,5 @@
 package com.example.formpendaftaran;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -8,10 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,16 +18,12 @@ import android.os.Looper;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.example.formpendaftaran.databinding.ActivityRegisterBinding;
 import com.example.formpendaftaran.db.DbHelper;
 import com.example.formpendaftaran.model.Location;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.CurrentLocationRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -38,35 +33,24 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.nio.channels.FileChannel;
-import java.text.DateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class RegisterActivity extends AppCompatActivity {
+public class UpdateActivity extends AppCompatActivity {
 
     private ActivityRegisterBinding binding;
     private Uri selectedImage;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private ActivityResultLauncher<String[]> rPermission;
     private List<String> permissionRequest = new ArrayList<>();
-    private Location location;
+    private Location location = null;
     private String gender;
     private LocationRequest locationRequest;
     DbHelper db = new DbHelper(this);
@@ -77,25 +61,34 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        getSupportActionBar().setTitle("Register");
+        getSupportActionBar().setTitle("Update");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupListener();
         requestPermission();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        binding.nama.setText("Azis Rosyid");
-        binding.alamat.setText("Indonesia");
-        binding.noHp.setText("0895421891378");
-        binding.pria.setChecked(true);
+        setupActivity();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
+    }
+
+    private void setupActivity() {
+        binding.nama.setText(getIntent().getStringExtra("name"));
+        binding.alamat.setText(getIntent().getStringExtra("address"));
+        binding.noHp.setText(getIntent().getStringExtra("phoneNumber"));
+        switch (getIntent().getStringExtra("gender")) {
+            case "Pria":
+                binding.pria.setChecked(true);
+                break;
+            case "Wanita":
+                binding.wanita.setChecked(true);
+                break;
+        }
+        File path = new File(getApplication().getFilesDir() + "/foto/" + getIntent().getStringExtra("image"));
+        binding.foto.setImageBitmap(BitmapFactory.decodeFile(path.getAbsolutePath()));
+        if (!path.exists()) binding.foto.setImageResource(R.drawable.ic_baseline_account_box_24);
     }
 
     private void setupListener() {
@@ -122,31 +115,19 @@ public class RegisterActivity extends AppCompatActivity {
                 binding.tvKelamin.setText("Jenis Kelamin");
                 binding.tvKelamin.setTextColor(getResources().getColor(R.color.black));
             }
-            if (location == null) {
-                binding.tvLokasi.setText("Lokasi Pendaftaran*");
-                binding.tvLokasi.setTextColor(Color.parseColor("#E61E1E"));
-                valid = false;
-            } else {
-                binding.tvLokasi.setText("Lokasi Pendaftaran");
-                binding.tvLokasi.setTextColor(getResources().getColor(R.color.black));
-            }
-            if (selectedImage == null) {
-                binding.tvFoto.setText("Upload Foto*");
-                binding.tvFoto.setTextColor(Color.parseColor("#E61E1E"));
-                valid = false;
-            } else {
-                binding.tvFoto.setText("Upload Foto");
-                binding.tvFoto.setTextColor(getResources().getColor(R.color.black));
-            }
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 100);
                 valid = false;
             }
             if (!valid) return;
 
-            String fileName = System.currentTimeMillis() + "_" + getFileName(selectedImage);
-            db.insert(binding.nama.getText().toString(), binding.alamat.getText().toString(), binding.noHp.getText().toString(), gender, location, fileName);
-            saveFile(selectedImage, fileName);
+            String fileName = null;
+            if (selectedImage != null) {
+                fileName = System.currentTimeMillis() + "_" + getFileName(selectedImage);
+                saveFile(selectedImage, fileName);
+            }
+            db.update(getIntent().getIntExtra("id", 0), binding.nama.getText().toString(), binding.alamat.getText().toString(), binding.noHp.getText().toString(), gender, location, fileName);
+
             this.finish();
         });
         binding.jenisKelamin.setOnCheckedChangeListener((group, checkedId) -> {
@@ -180,10 +161,10 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onLocationResult(@NonNull LocationResult locationResult) {
                     super.onLocationResult(locationResult);
-                    LocationServices.getFusedLocationProviderClient(RegisterActivity.this).removeLocationUpdates(this);
+                    LocationServices.getFusedLocationProviderClient(UpdateActivity.this).removeLocationUpdates(this);
                     if (locationResult != null && locationResult.getLocations().size() > 0) {
                         int index = locationResult.getLocations().size() - 1;
-                        RegisterActivity.this.location = new Location(locationResult.getLocations().get(index).getLatitude(), locationResult.getLocations().get(index).getLongitude());
+                        UpdateActivity.this.location = new Location(locationResult.getLocations().get(index).getLatitude(), locationResult.getLocations().get(index).getLongitude());
                         binding.statusLokasi.setText("Get Location Success!");
                         binding.statusLokasi.setTextColor(Color.parseColor("#43B500"));
                         binding.tvLokasi.setText("Lokasi Pendaftaran");
@@ -256,8 +237,6 @@ public class RegisterActivity extends AppCompatActivity {
     ActivityResultLauncher<String> openImageLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
         selectedImage = result;
         binding.foto.setImageURI(result);
-        binding.tvFoto.setText("Upload Foto");
-        binding.tvFoto.setTextColor(getResources().getColor(R.color.black));
     });
 
     private void saveFile(Uri fileUri, String fileName) {

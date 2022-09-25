@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.formpendaftaran.model.Data;
 import com.example.formpendaftaran.model.Location;
@@ -40,11 +41,11 @@ public class DbHelper extends SQLiteOpenHelper {
     public ArrayList<Data> getData() {
         ArrayList<Data> items = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 Data data = new Data(
-                        cursor.getString(0),
+                        cursor.getInt(0),
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
@@ -62,6 +63,22 @@ public class DbHelper extends SQLiteOpenHelper {
     public void insert(String name, String address, String phoneNumber, String gender, Location location, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("INSERT INTO " + TABLE_NAME + "(" + COLUMN_NAME + ", " + COLUMN_ADDRESS + ", " + COLUMN_PHONE_NUMBER + ", " + COLUMN_GENDER + ", " + COLUMN_LATITUDE + ", " + COLUMN_LONGITUDE + ", " + COLUMN_IMAGE +") VALUES('" + name + "', '" + address + "', '" + phoneNumber + "', '" + gender + "', " + location.getLatitude() + ", " + location.getLongitude() + ", '" + image + "')");
+        db.close();
+    }
+
+    public void update(int id, String name, String address, String phoneNumber, String gender, Location location, String image) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME + " SET " + COLUMN_NAME + " = '" + name + "', " + COLUMN_ADDRESS + " = '" + address + "', " + COLUMN_PHONE_NUMBER + " = '" + phoneNumber + "', " + COLUMN_GENDER + " = '" + gender;
+        if (location != null) query += "', " + COLUMN_LONGITUDE + " = " + location.getLatitude() + ", " + COLUMN_LONGITUDE + " = " + location.getLongitude();
+        if (image != null) query += ", " + COLUMN_IMAGE + " = '" + image + "'";
+        query += " WHERE " + COLUMN_ID + "=" + id;
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void delete(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + "= " + id );
         db.close();
     }
 }
