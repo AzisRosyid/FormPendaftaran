@@ -70,6 +70,11 @@ public class DetailActivity extends AppCompatActivity {
                     .setCancelable(false)
                     .setPositiveButton("Yes", (dialog, which) -> {
                         db.delete(getIntent().getIntExtra("id", 0));
+                        try {
+                            new File(getApplication().getFilesDir() + "/foto/" + getIntent().getStringExtra("image")).delete();
+                        } catch (Exception e) {
+
+                        }
                         this.finish();
                     })
                     .setNegativeButton("Cancel", (dialog, which) -> {

@@ -86,10 +86,10 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        binding.nama.setText("Azis Rosyid");
-        binding.alamat.setText("Indonesia");
-        binding.noHp.setText("0895421891378");
-        binding.pria.setChecked(true);
+//        binding.nama.setText("Azis Rosyid");
+//        binding.alamat.setText("Indonesia");
+//        binding.noHp.setText("0895421891378");
+//        binding.pria.setChecked(true);
     }
 
     @Override

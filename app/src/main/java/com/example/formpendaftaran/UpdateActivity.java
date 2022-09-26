@@ -260,6 +260,11 @@ public class UpdateActivity extends AppCompatActivity {
                 if (bos != null) bos.close();
             } catch (IOException e) { }
         }
+        try {
+            new File(path + "/" + getIntent().getStringExtra("image")).delete();
+        } catch (Exception e) {
+
+        }
     }
 
     private String getFileName(Uri uri){
